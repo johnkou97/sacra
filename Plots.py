@@ -67,10 +67,15 @@ if os.path.exists('results'):
 else:
     os.mkdir('results')
 
-
 #do the analysis and save the plots
 
 #linear
+
+if os.path.exists('results/linear'):
+    pass
+else:
+    os.mkdir('results/linear')
+
 for eos in EOS:
     if eos!='SFHo':
         for mas in MASS:
@@ -99,7 +104,7 @@ for eos in EOS:
             fig=plt.figure()
             plt.subplot(212)
             plt.plot((freq2*Frequency),amp2)
-            plt.xlim(0,6000)
+            plt.xlim(0,5000)
             plt.xlabel('Frequency (Hz)')
             plt.legend(['Postmerger only'])
             plt.subplot(222)
@@ -108,9 +113,9 @@ for eos in EOS:
             plt.subplot(221)
             plt.plot(time,strain)
             plt.title('Time Domain')
-            plt.savefig('results/'+eos+'_'+mas+'.jpg')
+            plt.savefig('results/linear/'+eos+'_'+mas+'.jpg')
+            plt.close()
     else:
-            print(1)
             mas=MASS[0]
             f=open('data/'+eos+'_'+mas,'r')
             lines=f.readlines()
@@ -145,4 +150,93 @@ for eos in EOS:
             plt.subplot(221)
             plt.plot(time,strain)
             plt.title('Time Domain')
-            plt.savefig('results/'+eos+'_'+mas+'.jpg')
+            plt.savefig('results/linear/'+eos+'_'+mas+'.jpg')
+            plt.close()
+
+
+#logarithmic
+if os.path.exists('results/log'):
+    pass
+else:
+    os.mkdir('results/log')
+
+for eos in EOS:
+    if eos!='SFHo':
+        for mas in MASS:
+            f=open('data/'+eos+'_'+mas,'r')
+            lines=f.readlines()
+            result1=[]
+            result2=[]
+            for x in lines:
+                for i in range(len(x.split(' '))):
+                    if x.split(' ')[i]!='':
+                        result1.append(x.split(' ')[i])
+                        for j in range(i+1,len(x.split(' '))):
+                            if x.split(' ')[j]!='':
+                                result2.append(x.split(' ')[j])
+                                break
+                        break
+
+            time=np.zeros(len(result1))
+            strain=np.zeros(len(result1))
+            for i in range(len(result1)):
+                time[i]=float(result1[i])
+                strain[i]=float(result2[i])
+
+            mastot=float(mas.split('_')[0])/100+float(mas.split('_')[1])/100
+            freq2,amp2,tim,post=analyze(strain,time,mastot)
+            fig=plt.figure()
+            plt.subplot(212)
+            plt.plot((freq2*Frequency),amp2)
+            plt.yscale('log')
+            plt.xlim(0,5000)
+            plt.ylim(10**(-6),1)
+            plt.xlabel('Frequency (Hz)')
+            plt.legend(['Postmerger only'])
+            plt.subplot(222)
+            plt.plot(tim,post)
+            plt.title('Postmerger')
+            plt.subplot(221)
+            plt.plot(time,strain)
+            plt.title('Time Domain')
+            plt.savefig('results/log/'+eos+'_'+mas+'.jpg')
+            plt.close()
+    else:
+            mas=MASS[0]
+            f=open('data/'+eos+'_'+mas,'r')
+            lines=f.readlines()
+            result1=[]
+            result2=[]
+            for x in lines:
+                for i in range(len(x.split(' '))):
+                    if x.split(' ')[i]!='':
+                        result1.append(x.split(' ')[i])
+                        for j in range(i+1,len(x.split(' '))):
+                            if x.split(' ')[j]!='':
+                                result2.append(x.split(' ')[j])
+                                break
+                        break
+
+            time=np.zeros(len(result1))
+            strain=np.zeros(len(result1))
+            for i in range(len(result1)):
+                time[i]=float(result1[i])
+                strain[i]=float(result2[i])
+            mastot=float(mas.split('_')[0])/100+float(mas.split('_')[1])/100
+            freq2,amp2,tim,post=analyze(strain,time,mastot)
+            fig=plt.figure()
+            plt.subplot(212)
+            plt.plot((freq2*Frequency),amp2)
+            plt.yscale('log')
+            plt.ylim(10**(-6),1)
+            plt.xlim(0,5000)
+            plt.xlabel('Frequency (Hz)')
+            plt.legend(['Postmerger only'])
+            plt.subplot(222)
+            plt.plot(tim,post)
+            plt.title('Postmerger')
+            plt.subplot(221)
+            plt.plot(time,strain)
+            plt.title('Time Domain')
+            plt.savefig('results/log/'+eos+'_'+mas+'.jpg')
+            plt.close()
