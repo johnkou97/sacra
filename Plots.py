@@ -261,7 +261,7 @@ for eos in EOS:
             ax.axvspan((f_s*Mc)*1000-286, (f_s*Mc)*1000+286, alpha=0.3, color='cyan')
             plt.xlim(0,5000)
             plt.xlabel('Frequency (Hz)')
-            plt.legend(['Postmerger only'])
+            plt.legend()
             plt.savefig('results/q1/linear/'+eos+'_'+mas+'.jpg')
             plt.close
 
@@ -282,7 +282,7 @@ for eos in EOS:
         elif eos=='B':
             nmb=5
 
-        for mas in MASS:
+        for mas in eq:
             f=open('data/'+eos+'_'+mas,'r')
             lines=f.readlines()
             result1=[]
@@ -328,7 +328,7 @@ for eos in EOS:
             ax.axvspan((f_s*Mc)*1000-286, (f_s*Mc)*1000+286, alpha=0.3, color='cyan')
             plt.xlim(0,5000)
             plt.xlabel('Frequency (Hz)')
-            plt.legend(['Postmerger only'])
+            plt.legend()
             plt.savefig('results/q1/log/'+eos+'_'+mas+'.jpg')
             plt.close()
 
@@ -396,7 +396,7 @@ for eos in EOS:
             ax.axvspan((f_s_a*Mc)*1000-286, (f_s_a*Mc)*1000+286, alpha=0.3, color='cyan')
             plt.xlim(0,5000)
             plt.xlabel('Frequency (Hz)')
-            plt.legend(['Postmerger only'])
+            plt.legend()
             plt.savefig('results/all_q/linear/'+eos+'_'+mas+'.jpg')
             plt.close()
 
@@ -478,7 +478,7 @@ for eos in EOS:
             ax.axvspan((f_s_a*Mc)*1000-286, (f_s_a*Mc)*1000+286, alpha=0.3, color='cyan')
             plt.xlim(0,5000)
             plt.xlabel('Frequency (Hz)')
-            plt.legend(['Postmerger only'])
+            plt.legend()
             plt.savefig('results/all_q/log/'+eos+'_'+mas+'.jpg')
             plt.close()
 
