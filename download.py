@@ -19,7 +19,7 @@ def download(url,filename):
     return filename
 
 #define EOS and pair of Masses to be downloaded (this includes every EOS and pair of masses)
-EOS=['15H','125H','H','HB','B','SFHo']
+EOS=['15H','125H','H','HB','B']
 MASS=['135_135','125_146','125_125','121_151','118_155','117_156','116_158','112_140','107_146']
 
 #create folder data to save the downloaded files
