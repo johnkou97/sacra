@@ -74,7 +74,7 @@ def analyze(rhM,time,mass):
     #ampl=rhM
     #tim=time
 
-    tuk=signal.tukey(len(ampl))
+    tuk=signal.tukey(len(ampl),0.03)
     dat=ampl*tuk
 
     fq,fd=fre_do(tim,dat,mass)
