@@ -200,8 +200,11 @@ if os.path.exists('results/3fig/log'):
     pass
 else:
     os.mkdir('results/3fig/log')
+
+
 #q=1
-#linear
+
+
 for eos in EOS:
         if eos=='15H':
             nmb=1
@@ -246,6 +249,7 @@ for eos in EOS:
             f_2=f20(Mc,r68[nmb-1,0])
             f_s=fspir(Mc,r68[nmb-1,1])
             f_p=fpeak(Mc,r68[nmb-1,0])
+            f_0=2*f_p-f_2
             #print(f_2_a,f_s_a,f_p_a)
 
 
@@ -259,64 +263,13 @@ for eos in EOS:
             ax.axvspan((f_2*Mc)*1000-229, (f_2*Mc)*1000+229, alpha=0.3, color='yellow')
             ax.axvline((f_s*Mc)*1000,color='orange',label='spiral')
             ax.axvspan((f_s*Mc)*1000-286, (f_s*Mc)*1000+286, alpha=0.3, color='cyan')
+            ax.axvline((f_0*Mc)*1000,linestyle="--",color='grey',label='2+0')
             plt.xlim(0,5000)
             plt.xlabel('Frequency (Hz)')
             plt.legend()
             plt.savefig('results/q1/linear/'+eos+'_'+mas+'.jpg')
             plt.close
 
-
-
-#logarithmic
-
-
-for eos in EOS:
-        if eos=='15H':
-            nmb=1
-        elif eos=='125H':
-            nmb=2
-        elif eos=='H':
-            nmb=3
-        elif eos=='HB':
-            nmb=4
-        elif eos=='B':
-            nmb=5
-
-        for mas in eq:
-            f=open('data/'+eos+'_'+mas,'r')
-            lines=f.readlines()
-            result1=[]
-            result2=[]
-            for x in lines:
-                for i in range(len(x.split(' '))):
-                    if x.split(' ')[i]!='':
-                        result1.append(x.split(' ')[i])
-                        for j in range(i+1,len(x.split(' '))):
-                            if x.split(' ')[j]!='':
-                                result2.append(x.split(' ')[j])
-                                break
-                        break
-
-            time=np.zeros(len(result1))
-            strain=np.zeros(len(result1))
-            for i in range(len(result1)):
-                time[i]=float(result1[i])
-                strain[i]=float(result2[i])
-
-
-            mas1=float(mas.split('_')[0])/100
-            mas2=float(mas.split('_')[1])/100
-            mastot=float(mas.split('_')[0])/100+float(mas.split('_')[1])/100
-            q=mas1/mas2
-            Mc=pow(q/pow(1+q,2),3/5)*mastot
-
-
-            freq2,amp2,tim,post=analyze(strain,time,mastot)
-            f_2=f20(Mc,r68[nmb-1,0])
-            f_s=fspir(Mc,r68[nmb-1,1])
-            f_p=fpeak(Mc,r68[nmb-1,1])
-            #print(f_2_a,f_s_a,f_p_a)
-
             fig=plt.figure()
             plt.plot((freq2*Frequency),amp2)
             ax=plt.subplot()
@@ -326,6 +279,7 @@ for eos in EOS:
             ax.axvspan((f_2*Mc)*1000-229, (f_2*Mc)*1000+229, alpha=0.3, color='yellow')
             ax.axvline((f_s*Mc)*1000,color='orange',label='spiral')
             ax.axvspan((f_s*Mc)*1000-286, (f_s*Mc)*1000+286, alpha=0.3, color='cyan')
+            ax.axvline((f_0*Mc)*1000,linestyle="--",color='grey',label='2+0')
             plt.xlim(0,5000)
             plt.xlabel('Frequency (Hz)')
             plt.yscale('log')
@@ -336,8 +290,9 @@ for eos in EOS:
 
 
 
+
 #all cases
-#linear
+
 
 for eos in EOS:
         if eos=='15H':
@@ -383,6 +338,7 @@ for eos in EOS:
             f_2_a=f20_a(Mc,r68[nmb-1,0])
             f_s_a=fspir_a(Mc,r68[nmb-1,1])
             f_p_a=fpeak_a(Mc,r68[nmb-1,1])
+            f_0_a=2*f_p_a-f_2_a
             #print(f_2_a,f_s_a,f_p_a)
 
 
@@ -396,6 +352,7 @@ for eos in EOS:
             ax.axvspan((f_2_a*Mc)*1000-229, (f_2_a*Mc)*1000+229, alpha=0.3, color='yellow')
             ax.axvline((f_s_a*Mc)*1000,color='orange',label='spiral')
             ax.axvspan((f_s_a*Mc)*1000-286, (f_s_a*Mc)*1000+286, alpha=0.3, color='cyan')
+            ax.axvline((f_0_a*Mc)*1000,linestyle="--",color='grey',label='2+0')
             plt.xlim(0,5000)
             plt.xlabel('Frequency (Hz)')
             plt.legend()
@@ -417,58 +374,6 @@ for eos in EOS:
             plt.savefig('results/3fig/linear/'+eos+'_'+mas+'.jpg')
             plt.close()
 
-
-
-#logarithmic
-
-
-for eos in EOS:
-        if eos=='15H':
-            nmb=1
-        elif eos=='125H':
-            nmb=2
-        elif eos=='H':
-            nmb=3
-        elif eos=='HB':
-            nmb=4
-        elif eos=='B':
-            nmb=5
-
-        for mas in MASS:
-            f=open('data/'+eos+'_'+mas,'r')
-            lines=f.readlines()
-            result1=[]
-            result2=[]
-            for x in lines:
-                for i in range(len(x.split(' '))):
-                    if x.split(' ')[i]!='':
-                        result1.append(x.split(' ')[i])
-                        for j in range(i+1,len(x.split(' '))):
-                            if x.split(' ')[j]!='':
-                                result2.append(x.split(' ')[j])
-                                break
-                        break
-
-            time=np.zeros(len(result1))
-            strain=np.zeros(len(result1))
-            for i in range(len(result1)):
-                time[i]=float(result1[i])
-                strain[i]=float(result2[i])
-
-
-            mas1=float(mas.split('_')[0])/100
-            mas2=float(mas.split('_')[1])/100
-            mastot=float(mas.split('_')[0])/100+float(mas.split('_')[1])/100
-            q=mas1/mas2
-            Mc=pow(q/pow(1+q,2),3/5)*mastot
-
-
-            freq2,amp2,tim,post=analyze(strain,time,mastot)
-            f_2_a=f20_a(Mc,r68[nmb-1,0])
-            f_s_a=fspir_a(Mc,r68[nmb-1,1])
-            f_p_a=fpeak_a(Mc,r68[nmb-1,1])
-            #print(f_2_a,f_s_a,f_p_a)
-
             fig=plt.figure()
             plt.plot((freq2*Frequency),amp2)
             ax=plt.subplot()
@@ -478,6 +383,7 @@ for eos in EOS:
             ax.axvspan((f_2_a*Mc)*1000-229, (f_2_a*Mc)*1000+229, alpha=0.3, color='yellow')
             ax.axvline((f_s_a*Mc)*1000,color='orange',label='spiral')
             ax.axvspan((f_s_a*Mc)*1000-286, (f_s_a*Mc)*1000+286, alpha=0.3, color='cyan')
+            ax.axvline((f_0_a*Mc)*1000,linestyle="--",color='grey',label='2+0')
             plt.xlim(0,5000)
             plt.xlabel('Frequency (Hz)')
             plt.yscale('log')
