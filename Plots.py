@@ -3,6 +3,7 @@ import os
 import numpy as np
 import math
 import scipy
+import pywt
 from scipy import signal
 import matplotlib.pyplot as plt
 from scipy.interpolate import CubicSpline as spline
@@ -200,6 +201,11 @@ if os.path.exists('results/3fig/log'):
     pass
 else:
     os.mkdir('results/3fig/log')
+
+if os.path.exists('results/spec'):
+    pass
+else:
+    os.mkdir('results/spec')
 
 
 #q=1
@@ -407,4 +413,16 @@ for eos in EOS:
             plt.plot(time,strain)
             plt.title('Time Domain')
             plt.savefig('results/3fig/log/'+eos+'_'+mas+'.jpg')
+            plt.close()
+
+            fc =f_p_a
+            dt=(tim[1]-tim[0])*Time*1000
+            band = 2.5
+            wavelet = 'cmor'+str(band)+'-'+str(fc)
+            widths = fc/np.linspace(fc-1.0, fc+1.0, 400)/dt
+            cwtmatr, freqs = pywt.cwt(post, widths, wavelet, dt)
+            power = abs(cwtmatr)
+            fig, ax = plt.subplots(figsize=(10, 6), dpi=150)
+            ax.pcolormesh(tim, freqs, power,cmap='jet')
+            plt.savefig('results/spec/'+eos+'_'+mas+'.jpg')
             plt.close()
