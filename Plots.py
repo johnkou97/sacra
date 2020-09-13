@@ -6,6 +6,7 @@ import scipy
 import pywt
 from scipy import signal
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 from scipy.interpolate import CubicSpline as spline
 from scipy.fftpack import fft, fftshift ,ifft,rfft,fftfreq,rfftfreq
 c=2.9979e10
@@ -207,6 +208,16 @@ if os.path.exists('results/spec'):
 else:
     os.mkdir('results/spec')
 
+if os.path.exists('results/spec/linear'):
+    pass
+else:
+    os.mkdir('results/spec/linear')
+
+if os.path.exists('results/spec/log'):
+    pass
+else:
+    os.mkdir('results/spec/log')
+
 
 #q=1
 
@@ -339,14 +350,20 @@ for eos in EOS:
             q=mas1/mas2
             Mc=pow(q/pow(1+q,2),3/5)*mastot
 
-
             freq2,amp2,tim,post=analyze(strain,time,mastot)
+
             f_2_a=f20_a(Mc,r68[nmb-1,0])
             f_s_a=fspir_a(Mc,r68[nmb-1,1])
             f_p_a=fpeak_a(Mc,r68[nmb-1,1])
             f_0_a=2*f_p_a-f_2_a
-            #print(f_2_a,f_s_a,f_p_a)
 
+            timems=np.zeros(len(tim))
+            for i in range(len(timems)):
+                timems[i]=tim[i]*Time*1000
+
+            timeMS=np.zeros(len(time))
+            for i in range(len(timems)):
+                timeMS[i]=time[i]*Time*1000
 
 
             fig=plt.figure()
@@ -372,10 +389,10 @@ for eos in EOS:
             plt.xlabel('Frequency (Hz)')
             plt.legend(['Postmerger only'])
             plt.subplot(222)
-            plt.plot(tim,post)
+            plt.plot(timems,post)
             plt.title('Postmerger')
             plt.subplot(221)
-            plt.plot(time,strain)
+            plt.plot(timeMS,strain)
             plt.title('Time Domain')
             plt.savefig('results/3fig/linear/'+eos+'_'+mas+'.jpg')
             plt.close()
@@ -407,22 +424,28 @@ for eos in EOS:
             plt.xlabel('Frequency (Hz)')
             plt.legend(['Postmerger only'])
             plt.subplot(222)
-            plt.plot(tim,post)
+            plt.plot(timems,post)
             plt.title('Postmerger')
             plt.subplot(221)
-            plt.plot(time,strain)
+            plt.plot(timeMS,strain)
             plt.title('Time Domain')
             plt.savefig('results/3fig/log/'+eos+'_'+mas+'.jpg')
             plt.close()
 
-            fc =f_p_a
+            fc =3
             dt=(tim[1]-tim[0])*Time*1000
             band = 2.5
             wavelet = 'cmor'+str(band)+'-'+str(fc)
-            widths = fc/np.linspace(fc-1.0, fc+1.0, 400)/dt
+            widths = fc/np.linspace(fc-2.0, fc+2.0, 500)/dt
             cwtmatr, freqs = pywt.cwt(post, widths, wavelet, dt)
             power = abs(cwtmatr)
+
             fig, ax = plt.subplots(figsize=(10, 6), dpi=150)
-            ax.pcolormesh(tim, freqs, power,cmap='jet')
-            plt.savefig('results/spec/'+eos+'_'+mas+'.jpg')
+            ax.pcolormesh(timems, freqs, power,cmap='jet')
+            plt.savefig('results/spec/linear/'+eos+'_'+mas+'.jpg')
+            plt.close()
+
+            fig, ax = plt.subplots(figsize=(10, 6), dpi=150)
+            ax.pcolormesh(timems, freqs, power,norm=colors.LogNorm(0.05,5),cmap='jet')
+            plt.savefig('results/spec/log/'+eos+'_'+mas+'.jpg')
             plt.close()
