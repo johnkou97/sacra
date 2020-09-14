@@ -7,6 +7,8 @@ import pywt
 from scipy import signal
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
+                               AutoMinorLocator)
 from scipy.interpolate import CubicSpline as spline
 from scipy.fftpack import fft, fftshift ,ifft,rfft,fftfreq,rfftfreq
 c=2.9979e10
@@ -283,6 +285,8 @@ for eos in EOS:
             ax.axvline((f_0*Mc)*1000,linestyle="--",color='grey',label='2+0')
             plt.xlim(0,5000)
             plt.xlabel('Frequency (Hz)')
+            ax.xaxis.set_major_locator(MultipleLocator(500))
+            ax.xaxis.set_minor_locator(MultipleLocator(100))
             plt.legend()
             plt.savefig('results/q1/linear/'+eos+'_'+mas+'.jpg')
             plt.close
@@ -300,6 +304,8 @@ for eos in EOS:
             plt.xlim(0,5000)
             plt.xlabel('Frequency (Hz)')
             plt.yscale('log')
+            ax.xaxis.set_major_locator(MultipleLocator(500))
+            ax.xaxis.set_minor_locator(MultipleLocator(100))
             plt.ylim(1e-3,1)
             plt.legend()
             plt.savefig('results/q1/log/'+eos+'_'+mas+'.jpg')
@@ -362,7 +368,7 @@ for eos in EOS:
                 timems[i]=tim[i]*Time*1000
 
             timeMS=np.zeros(len(time))
-            for i in range(len(timems)):
+            for i in range(len(timeMS)):
                 timeMS[i]=time[i]*Time*1000
 
 
@@ -378,6 +384,8 @@ for eos in EOS:
             ax.axvline((f_0_a*Mc)*1000,linestyle="--",color='grey',label='2+0')
             plt.xlim(0,5000)
             plt.xlabel('Frequency (Hz)')
+            ax.xaxis.set_major_locator(MultipleLocator(500))
+            ax.xaxis.set_minor_locator(MultipleLocator(100))
             plt.legend()
             plt.savefig('results/all_q/linear/'+eos+'_'+mas+'.jpg')
             plt.close()
@@ -389,7 +397,7 @@ for eos in EOS:
             plt.xlabel('Frequency (Hz)')
             plt.legend(['Postmerger only'])
             plt.subplot(222)
-            plt.plot(timems,post)
+            plt.plot(timems-timems[0],post)
             plt.title('Postmerger')
             plt.subplot(221)
             plt.plot(timeMS,strain)
@@ -410,6 +418,8 @@ for eos in EOS:
             plt.xlim(0,5000)
             plt.xlabel('Frequency (Hz)')
             plt.yscale('log')
+            ax.xaxis.set_major_locator(MultipleLocator(500))
+            ax.xaxis.set_minor_locator(MultipleLocator(100))
             plt.ylim(1e-3,1)
             plt.legend()
             plt.savefig('results/all_q/log/'+eos+'_'+mas+'.jpg')
@@ -424,7 +434,7 @@ for eos in EOS:
             plt.xlabel('Frequency (Hz)')
             plt.legend(['Postmerger only'])
             plt.subplot(222)
-            plt.plot(timems,post)
+            plt.plot(timems-timems[0],post)
             plt.title('Postmerger')
             plt.subplot(221)
             plt.plot(timeMS,strain)
@@ -441,11 +451,23 @@ for eos in EOS:
             power = abs(cwtmatr)
 
             fig, ax = plt.subplots(figsize=(10, 6), dpi=150)
-            ax.pcolormesh(timems, freqs, power,cmap='jet')
+            ax.pcolormesh(timems-timems[0], freqs, power,cmap='jet')
+            ax.xaxis.set_major_locator(MultipleLocator(1))
+            ax.xaxis.set_minor_locator(MultipleLocator(.2))
+            ax.yaxis.set_major_locator(MultipleLocator(.5))
+            ax.yaxis.set_minor_locator(MultipleLocator(.1))
+            plt.xlabel('Time (ms)')
+            plt.ylabel('Frequency (kHz)')
             plt.savefig('results/spec/linear/'+eos+'_'+mas+'.jpg')
             plt.close()
 
             fig, ax = plt.subplots(figsize=(10, 6), dpi=150)
-            ax.pcolormesh(timems, freqs, power,norm=colors.LogNorm(0.05,5),cmap='jet')
+            ax.pcolormesh(timems-timems[0], freqs, power,norm=colors.LogNorm(0.05,5),cmap='jet')
+            ax.xaxis.set_major_locator(MultipleLocator(1))
+            ax.xaxis.set_minor_locator(MultipleLocator(.2))
+            ax.yaxis.set_major_locator(MultipleLocator(.5))
+            ax.yaxis.set_minor_locator(MultipleLocator(.1))
+            plt.xlabel('Time (ms)')
+            plt.ylabel('Frequency (kHz)')
             plt.savefig('results/spec/log/'+eos+'_'+mas+'.jpg')
             plt.close()
